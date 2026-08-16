@@ -1,0 +1,39 @@
+// Prisma schema for AbleSpace Task Manager
+// Default datasource is SQLite for zero-config local dev.
+// For deployment, change provider to "postgresql" and set DATABASE_URL
+// to a Postgres connection string (e.g. from Neon or Railway).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// NOTE: SQLite does not support native enums in Prisma, so status and
+// priority are plain Strings, validated at the application layer instead
+// (see apps/api/src/tasks/dto). If you switch datasource provider to
+// "postgresql" later, you can convert these back to real Prisma enums.
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  isGuest   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  tasks     Task[]
+}
+
+model Task {
+  id          String    @id @default(uuid())
+  title       String
+  description String?
+  status      String    @default("TODO")
+  priority    String    @default("MEDIUM")
+  dueDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  owner       User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId     String
+}
