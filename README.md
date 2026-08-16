@@ -1,25 +1,13 @@
 # AbleSpace Task Manager
 
-A full-stack task management app built for the AbleSpace Full Stack Developer (Fresher) assessment.
+# AbleSpace Task Manager
 
-- **Frontend:** Next.js 14 (App Router) + Tailwind CSS
-- **Backend:** NestJS + Prisma
-- **Database:** SQLite for local dev (switch to Postgres for production — see below)
-- **Auth:** Guest login issuing a JWT, no password required
+Full-stack Task Management app for AbleSpace's Fresher assessment. Next.js + Tailwind
+frontend, NestJS + Prisma backend, guest login with JWT, persistent light/dark theme,
+kanban board with task CRUD. Built without matching the provided Figma — see below for
+details.
 
-## ⚠️ Before you submit — read this
 
-**This implementation intentionally does not follow the provided Figma design.** The UI is
-an original kanban board (To Do / In Progress / Done, priority badges, light/dark theme,
-responsive layout) built to satisfy the functional requirements — task CRUD, theme
-switching with persistence, guest login, responsiveness — without matching the visual
-design. This is a deliberate, documented deviation, not an oversight.
-
-Since "Design Fidelity" and "Attention to detail" are explicitly primary evaluation
-criteria, expect this to cost points on those specific dimensions. Everything else —
-backend architecture, validation, component reusability, responsiveness as a general
-property (not matched to specific breakpoints from the design), code quality — is built
-to the same standard it would be either way.
 
 ## Project structure
 
