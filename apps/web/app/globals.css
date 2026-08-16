@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 250 250 252;
+  --surface: 255 255 255;
+  --surface-2: 244 245 248;
+  --border: 228 230 236;
+  --text: 23 23 28;
+  --text-muted: 108 112 122;
+  --accent: 59 107 255;
+}
+
+.dark {
+  --bg: 15 16 20;
+  --surface: 24 25 31;
+  --surface-2: 32 33 40;
+  --border: 46 47 56;
+  --text: 240 240 244;
+  --text-muted: 156 160 172;
+  --accent: 99 140 255;
+}
+
+body {
+  background-color: rgb(var(--bg));
+  color: rgb(var(--text));
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
