@@ -1,13 +1,42 @@
 # AbleSpace Task Manager
 
-# AbleSpace Task Manager
-
 Full-stack Task Management app for AbleSpace's Fresher assessment. Next.js + Tailwind
 frontend, NestJS + Prisma backend, guest login with JWT, persistent light/dark theme,
 kanban board with task CRUD. Built without matching the provided Figma — see below for
 details.
 
+## 🔗 Live Demo
 
+- **App:** https://ablespace-task-web.onrender.com
+- **API:** https://ablespace-task-api.onrender.com/api
+
+Both are deployed on Render's free tier, which spins down after ~15 minutes of
+inactivity. If the app has been idle, the **first load can take 30–60 seconds** while
+the backend wakes up — that's expected, not a bug. Subsequent requests are fast.
+
+> **Note on the database:** the Postgres instance backing this app is on Render's free
+> tier, which expires 30 days after creation. If it lapses before the 45-day window the
+> assignment asks for, the live app may show a database connection error until the DB is
+> recreated/upgraded — the code and deployment config themselves remain fully correct.
+
+- **Frontend:** Next.js 14 (App Router) + Tailwind CSS
+- **Backend:** NestJS + Prisma
+- **Database:** PostgreSQL (Render), SQLite supported for local dev — see setup below
+- **Auth:** Guest login issuing a JWT, no password required
+
+## ⚠️ Before you submit — read this
+
+**This implementation intentionally does not follow the provided Figma design.** The UI is
+an original kanban board (To Do / In Progress / Done, priority badges, light/dark theme,
+responsive layout) built to satisfy the functional requirements — task CRUD, theme
+switching with persistence, guest login, responsiveness — without matching the visual
+design. This is a deliberate, documented deviation, not an oversight.
+
+Since "Design Fidelity" and "Attention to detail" are explicitly primary evaluation
+criteria, expect this to cost points on those specific dimensions. Everything else —
+backend architecture, validation, component reusability, responsiveness as a general
+property (not matched to specific breakpoints from the design), code quality — is built
+to the same standard it would be either way.
 
 ## Project structure
 
@@ -44,9 +73,16 @@ npm install --workspaces
 ```
 
 ### 2. Backend setup
+The committed `schema.prisma` targets PostgreSQL (matching the production deployment).
+To run locally, either point `DATABASE_URL` in `apps/api/.env` at your own local/cloud
+Postgres instance, or switch `provider = "postgresql"` back to `provider = "sqlite"` in
+`apps/api/prisma/schema.prisma` for quick local testing (delete the `prisma/migrations`
+folder first if you switch providers, since migration history is provider-specific).
+
 ```bash
 cd apps/api
 cp .env.example .env
+# edit .env: set DATABASE_URL to your own Postgres (or switch schema to sqlite first)
 npx prisma migrate dev --name init
 npm run start:dev
 ```
@@ -66,26 +102,32 @@ creating tasks.
 
 ## Deployment
 
-### Backend → Railway or Render
-1. Push this repo to GitHub.
-2. Create a new Web Service, point it at `apps/api`.
-3. Build command: `npm install && npx prisma generate && npm run build`
-4. Start command: `npm run start`
-5. Add environment variables: `DATABASE_URL` (a Postgres connection string — Railway/Render
-   can provision one for you, or use [Neon](https://neon.tech)), `JWT_SECRET`, `CORS_ORIGIN`
-   (your deployed frontend URL).
-6. **Important:** if you switch to Postgres, change `provider = "sqlite"` to
-   `provider = "postgresql"` in `apps/api/prisma/schema.prisma` before deploying, then run
-   `npx prisma migrate deploy` against the production database.
+This project is deployed on **Render** (all three pieces — Postgres, backend, frontend —
+in one dashboard).
 
-### Frontend → Vercel
-1. Import the repo into Vercel, set the root directory to `apps/web`.
-2. Add environment variable `NEXT_PUBLIC_API_URL` pointing to your deployed backend
-   (e.g. `https://your-api.up.railway.app/api`).
-3. Deploy.
+### Database
+A Render PostgreSQL instance provisions `DATABASE_URL` automatically. `schema.prisma` is
+set to `provider = "postgresql"` to match.
 
-Keep both deployments live for at least 45 days after submission, per the assignment
-guidelines.
+### Backend (`ablespace-task-api`)
+- Root Directory: `apps/api`
+- Build Command: `npm install && npx prisma generate && npm run build`
+- Start Command: `npm run start`
+- Environment variables: `DATABASE_URL` (Render Postgres external URL, with
+  `?sslmode=require` appended), `JWT_SECRET`, `CORS_ORIGIN` (set to the frontend's URL,
+  no trailing slash)
+
+### Frontend (`ablespace-task-web`)
+- Root Directory: `apps/web`
+- Build Command: `npm install && npm run build`
+- Start Command: `npm run start`
+- Environment variable: `NEXT_PUBLIC_API_URL` (the backend's URL + `/api`)
+
+**Note:** `NEXT_PUBLIC_*` variables are baked into the build at build time, not read at
+runtime — if you change one, trigger a full rebuild, not just a restart, or the old value
+will still be in the deployed bundle.
+
+Live URLs for this deployment are at the top of this README under **Live Demo**.
 
 ## Documented deviations from Figma
 
