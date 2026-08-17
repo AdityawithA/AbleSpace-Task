@@ -24,7 +24,7 @@ the backend wakes up — that's expected, not a bug. Subsequent requests are fas
 - **Database:** PostgreSQL (Render), SQLite supported for local dev — see setup below
 - **Auth:** Guest login issuing a JWT, no password required
 
-## ⚠️ Before you submit — read this
+
 
 **This implementation intentionally does not follow the provided Figma design.** The UI is
 an original kanban board (To Do / In Progress / Done, priority badges, light/dark theme,
